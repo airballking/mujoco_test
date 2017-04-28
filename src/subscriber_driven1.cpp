@@ -64,6 +64,25 @@ public:
 
     d = mj_makeData(m);
 
+    for (size_t i=0; i<m->nbody; ++i)
+    {
+      std::string body_name(m->names + m->name_bodyadr[i]);
+      std::cout << body_name << std::endl;
+      std::cout << m->name_bodyadr[i] << std::endl;
+    }
+
+    for (size_t i=0; i<m->njnt; ++i)
+    {
+      std::string body_name(m->names + m->name_jntadr[i]);
+      std::cout << body_name << std::endl;
+      std::cout << m->name_jntadr[i] << std::endl;
+      std::cout << "type: " << m->jnt_type[i] << std::endl;
+    }
+
+
+
+//    }
+
     js_msg.name.resize(8);
     js_msg.position.resize(8);
     js_msg.velocity.resize(8);
