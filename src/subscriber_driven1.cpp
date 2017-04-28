@@ -33,11 +33,19 @@ public:
 
   void start()
   {
-    mj_activate("/home/student/mjpro140/bin/mjkey.txt");
+    std::string license_file, model_file;
+    if (!nh_.getParam("license_file", license_file))
+      throw std::runtime_error("Did not find parameter 'license_file'.");
+    if (!nh_.getParam("model_file", model_file))
+      throw std::runtime_error("Did not find parameter 'model_file'.");
+
+
+    mj_activate(license_file.c_str());
 
     objects_in_scene = 1;
 
-    m = mj_loadXML("/home/student/mjpro140/model/ur5/ur5.xml", NULL, error, 1000);
+    // TODO: get rid of this 1000
+    m = mj_loadXML(model_file.c_str(), NULL, error, 1000);
     cout<<"success"<<endl;
 
     if( !m )
