@@ -97,17 +97,11 @@ public:
       box.color.a = m->geom_rgba[(i*4)+3]; // Don't forget to set the alpha!
     }
 
-    //start_pose[8]  = {0.5,-0.1,0.2,-2.5,-1,0,-0.05,0.05};   //{0.1,-1,1,-2.5,-1,0,-0.05,0.05};{0,0,0,0,0,0,0,0}
-    //pos_set_point[8] = {-1,-0.8,0.9,-3.14,-1.57,0.8,-0.025,0.025}; //{0.3,-1.45,1.45,-3.14,-1.46,0.9,-0.04,0.04}{-1.57,-1.45,1.45,-3.14,-1.46,0.8,-0.025,0.025};
-    //vel_set_point[8] = {0,0,0,0,0,0,0,0};
-
     for(int c=0; c < m->njnt-objects_in_scene; c++)
     {
         // first 8 in d->ctrl is used as motor actuator (online gravity compensation)
-        //d->ctrl[c+8] = pos_set_point[c];  // next 8 in d->ctrl is used as position actuator
         d->ctrl[c+16] = vel_set_point[c]; // next 8 in d->ctrl is used as velocity actuator
         js_old.position[c] = start_pose[c];
-        //d->qpos[c+(objects_in_scene*7)] = start_pose[c];
     }
 
     sub_ = nh_.subscribe("joint_states_in", 1, &JointStateInterpreter::js_callback, this);
@@ -125,13 +119,11 @@ private:
   mjData* d;
   char error[1000];
   int objects_in_scene, callCount;
-  //double start_pose[8], pos_set_point[8];
   sensor_msgs::JointState js_msg,js_old,js_new;
   visualization_msgs::Marker box;
   // setting the set points for Joint angles in radians
-  double start_pose[8]; //    = {0,0,0,0,0,0,0,0};//{0.1,-1,1,-2.5,-1,0,-0.05,0.05};{0,0,0,0,0,0,0,0}{0.5,-0.1,0.2,-2.5,-1,0,-0.05,0.05}
-  //double pos_set_point[8] = {-1,-0.8,0.9,-3.14,-1.57,0.8,-0.025,0.025};//{0.3,-1.45,1.45,-3.14,-1.46,0.9,-0.04,0.04}{-1.57,-1.45,1.45,-3.14,-1.46,0.8,-0.025,0.025};
-  double vel_set_point[8]; // = {0,0,0,0,0,0,0,0};
+  double start_pose[8];
+  double vel_set_point[8];
 
 
   void js_callback(const sensor_msgs::JointStateConstPtr& message)
@@ -177,18 +169,11 @@ private:
       box.pose.orientation.z = d->xquat[(i*3)+2];
       box.pose.orientation.w = d->xquat[(i*3)+3];
 
-      //cout<<box[i].pose.position.x<<":"<< box[i].pose.position.y<<endl;
-      //cout<<d->xpos[3]<<":"<<d->xpos[4]<<endl;
     }
 
     js_pub.publish(js_msg);
     box_pub.publish(box);
     pub_.publish(*message);
-    //ros::spinOnce();
-    //ros::Duration(0.01).sleep();
-
-    //ROS_INFO("All Messages are Published");
-
 
     /*for (int z=0; z < m->njnt-objects_in_scene; z++)
     {
