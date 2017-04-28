@@ -4,8 +4,8 @@
 #include "mjmodel.h"
 #include "iostream"
 #include "fstream"
-#include "sensor_msgs/JointState.h"
 #include "visualization_msgs/Marker.h"
+#include <mujoco_test/helpers.h>
 
 using namespace std;
 
@@ -17,6 +17,7 @@ public:
 
   {
     // here is the place to init any variables
+    // TODO: get rid of this
     for (size_t i=0; i<8; ++i)
     {
       start_pose[i] = 0;
@@ -79,9 +80,7 @@ public:
       std::cout << "type: " << m->jnt_type[i] << std::endl;
     }
 
-
-
-//    }
+    std::cout << mujoco_test::get_joint_state(m, d) << std::endl;
 
     js_msg.name.resize(8);
     js_msg.position.resize(8);
