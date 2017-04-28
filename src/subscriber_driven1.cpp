@@ -12,9 +12,16 @@ using namespace std;
 class JointStateInterpreter
 {
 public:
-  JointStateInterpreter(const ros::NodeHandle& nh): nh_(nh)
+  JointStateInterpreter(const ros::NodeHandle& nh): 
+    nh_(nh), objects_in_scene(0), callCount(0)
+
   {
     // here is the place to init any variables
+    for (size_t i=0; i<8; ++i)
+    {
+      start_pose[i] = 0;
+      vel_set_point[i] = 0;
+    }
   }
   ~JointStateInterpreter()
   {
@@ -109,14 +116,14 @@ private:
   mjModel* m;
   mjData* d;
   char error[1000];
-  int objects_in_scene, callCount=0;
+  int objects_in_scene, callCount;
   //double start_pose[8], pos_set_point[8];
   sensor_msgs::JointState js_msg,js_old,js_new;
   visualization_msgs::Marker box;
   // setting the set points for Joint angles in radians
-  double start_pose[8]    = {0,0,0,0,0,0,0,0};//{0.1,-1,1,-2.5,-1,0,-0.05,0.05};{0,0,0,0,0,0,0,0}{0.5,-0.1,0.2,-2.5,-1,0,-0.05,0.05}
+  double start_pose[8]; //    = {0,0,0,0,0,0,0,0};//{0.1,-1,1,-2.5,-1,0,-0.05,0.05};{0,0,0,0,0,0,0,0}{0.5,-0.1,0.2,-2.5,-1,0,-0.05,0.05}
   //double pos_set_point[8] = {-1,-0.8,0.9,-3.14,-1.57,0.8,-0.025,0.025};//{0.3,-1.45,1.45,-3.14,-1.46,0.9,-0.04,0.04}{-1.57,-1.45,1.45,-3.14,-1.46,0.8,-0.025,0.025};
-  double vel_set_point[8] = {0,0,0,0,0,0,0,0};
+  double vel_set_point[8]; // = {0,0,0,0,0,0,0,0};
 
 
   void js_callback(const sensor_msgs::JointStateConstPtr& message)
